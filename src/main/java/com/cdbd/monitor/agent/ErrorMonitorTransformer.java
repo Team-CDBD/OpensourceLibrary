@@ -9,6 +9,7 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.ClassFileLocator;
 import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
+import org.objectweb.asm.ClassReader;
 
 
 public class ErrorMonitorTransformer implements ClassFileTransformer {
@@ -21,6 +22,10 @@ public class ErrorMonitorTransformer implements ClassFileTransformer {
       ProtectionDomain protectionDomain,
       byte[] classFileBuffer) {
     if (className == null || className.startsWith("com/cdbd/monitor") || className.startsWith("net/bytebuddy")) {
+      return null;
+    }
+
+    if (!containsAnnotation(classFileBuffer)) {
       return null;
     }
 
@@ -44,4 +49,12 @@ public class ErrorMonitorTransformer implements ClassFileTransformer {
     }
   }
 
+  private boolean containsAnnotation(byte[] classFileBuffer) {
+    ClassReader reader = new ClassReader(classFileBuffer);
+    AnnotationDetector detector = new AnnotationDetector();
+    reader.accept(
+        detector,
+        ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+    return detector.hasErrorMonitor;
+  }
 }
