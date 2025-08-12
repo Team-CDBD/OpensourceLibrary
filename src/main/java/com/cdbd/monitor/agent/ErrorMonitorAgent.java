@@ -1,0 +1,11 @@
+package com.cdbd.monitor.agent;
+
+import java.lang.instrument.Instrumentation;
+
+public class ErrorMonitorAgent {
+  public static void premain(String agentArgs, Instrumentation inst) {
+    System.out.println("[ErrorMonitorAgent] Agent is initializing...");
+    inst.addTransformer(new ErrorMonitorTransformer());
+  }
+
+}
