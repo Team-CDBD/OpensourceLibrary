@@ -3,10 +3,13 @@ package com.cdbd.monitor.reporter;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ErrorReporter {
 
   private static final ExecutorService executor = Executors.newFixedThreadPool(2);
+  private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   public static void handle(Throwable throwable) {
     executor.submit(() -> handleInternal(throwable));
@@ -26,6 +29,7 @@ public class ErrorReporter {
       ErrorPayload errorPayload = new ErrorPayload(
           className, methodName, lineNumber, errorMessage, severity, futureCalls
       );
+      String jsonPayload = gson.toJson(errorPayload);
 
     } catch (Throwable t) {
       // ErrorReporter 자체에서 오류가 나더라도 절대 밖으로 전파되지 않도록 함
