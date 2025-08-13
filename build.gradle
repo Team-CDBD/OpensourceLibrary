@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'com.cdbd'
@@ -20,9 +21,13 @@ targetCompatibility = 11
 jar {
     manifest {
         attributes(
-                'Premain-Class': 'com.ourcompany.monitor.agent.ErrorMonitorAgent',
+                'Premain-Class': 'com.cdbd.monitor.agent.ErrorMonitorAgent',
                 'Can-Redefine-Classes': 'true',
                 'Can-Retransform-Classes': 'true'
         )
     }
+    archiveClassifier = 'all'
 }
+
+jar.enabled = false
+build.dependsOn shadowJar

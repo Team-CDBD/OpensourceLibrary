@@ -27,3 +27,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Gradle
+.gradle/
+build/
+
+# IDE
+.idea/
+*.iml
