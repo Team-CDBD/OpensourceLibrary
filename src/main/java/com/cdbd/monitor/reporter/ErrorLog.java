@@ -2,25 +2,25 @@ package com.cdbd.monitor.reporter;
 
 import java.util.List;
 
-public class ErrorPayload {
+public class ErrorLog {
 
   private final String className;
-  private final String methodName;
-  private final int lineNumber;
+  private final String method;
+  private final int line;
   private final String message;
   private final String severity;
   private final List<String> futureCalls;
 
-  public ErrorPayload(
+  public ErrorLog(
       String className,
-      String methodName,
-      int lineNumber,
+      String method,
+      int line,
       String message,
       String severity,
       List<String> futureCalls) {
     this.className = className;
-    this.methodName = methodName;
-    this.lineNumber = lineNumber;
+    this.method = method;
+    this.line = line;
     this.message = message;
     this.severity = severity;
     this.futureCalls = futureCalls;
@@ -30,12 +30,12 @@ public class ErrorPayload {
     return className;
   }
 
-  public String getMethodName() {
-    return methodName;
+  public String getMethod() {
+    return method;
   }
 
-  public int getLineNumber() {
-    return lineNumber;
+  public int getLine() {
+    return line;
   }
 
   public String getMessage() {

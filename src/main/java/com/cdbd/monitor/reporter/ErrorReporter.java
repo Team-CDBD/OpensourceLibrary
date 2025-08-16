@@ -26,10 +26,10 @@ public class ErrorReporter {
       List<String> futureCalls = BytecodeFutureCallAnalyzer.analyze(
           className, methodName, lineNumber);
 
-      ErrorPayload errorPayload = new ErrorPayload(
+      ErrorLog errorLog = new ErrorLog(
           className, methodName, lineNumber, errorMessage, severity, futureCalls
       );
-      String jsonPayload = gson.toJson(errorPayload);
+      String jsonPayload = gson.toJson(errorLog);
 
     } catch (Throwable t) {
       // ErrorReporter 자체에서 오류가 나더라도 절대 밖으로 전파되지 않도록 함
