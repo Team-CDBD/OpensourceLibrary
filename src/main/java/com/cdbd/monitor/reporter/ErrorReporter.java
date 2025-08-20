@@ -30,6 +30,7 @@ public class ErrorReporter {
           className, methodName, lineNumber, errorMessage, severity, futureCalls
       );
       String jsonPayload = gson.toJson(errorLog);
+      System.out.println(jsonPayload);
 
     } catch (Throwable t) {
       // ErrorReporter 자체에서 오류가 나더라도 절대 밖으로 전파되지 않도록 함
