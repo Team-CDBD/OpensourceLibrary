@@ -3,10 +3,13 @@ package com.cdbd.monitor.reporter;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ErrorReporter {
 
   private static final ExecutorService executor = Executors.newFixedThreadPool(2);
+  private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
   public static void handle(Throwable throwable) {
     executor.submit(() -> handleInternal(throwable));
@@ -14,27 +17,19 @@ public class ErrorReporter {
 
   private static void handleInternal(Throwable throwable) {
     try {
-      System.out.println("\n=========================================");
-      System.out.println("    [ErrorMonitor] An exception was caught!");
-      System.out.println("=========================================");
-
       StackTraceElement element = throwable.getStackTrace()[0];
       String className = element.getClassName();
       String methodName = element.getMethodName();
       int lineNumber = element.getLineNumber();
-
-      System.out.println("Error Type: " + throwable.getClass().getName());
-      System.out.println("Error Message: " + throwable.getMessage());
-      System.out.println(String.format("Location: %s.%s() at line %d",
-          element.getClassName(), element.getMethodName(), element.getLineNumber()));
-
-      //TODO : JSON 생성, HTTP 전송 로직 추가
+      String errorMessage = throwable.getMessage();
+      String severity = "ERROR";
       List<String> futureCalls = BytecodeFutureCallAnalyzer.analyze(
           className, methodName, lineNumber);
-      if (!futureCalls.isEmpty()) {
-        System.out.println("Predicted Future Calls: " + futureCalls);
-      }
-      System.out.println("=========================================\n");
+
+      ErrorLog errorLog = new ErrorLog(
+          className, methodName, lineNumber, errorMessage, severity, futureCalls
+      );
+      String jsonPayload = gson.toJson(errorLog);
 
     } catch (Throwable t) {
       // ErrorReporter 자체에서 오류가 나더라도 절대 밖으로 전파되지 않도록 함
