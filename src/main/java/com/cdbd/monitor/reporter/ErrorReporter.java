@@ -32,6 +32,8 @@ public class ErrorReporter {
       String jsonPayload = gson.toJson(errorLog);
       System.out.println(jsonPayload);
 
+      System.out.println("AI에 분석 요청을 보냅니다...");
+
     } catch (Throwable t) {
       // ErrorReporter 자체에서 오류가 나더라도 절대 밖으로 전파되지 않도록 함
       System.err.println("[ErrorReporter] Failed to report an error.");
